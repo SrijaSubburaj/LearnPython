@@ -2,10 +2,12 @@ import csv
 import logging
 import sys
 from azure.storage.blob import BlobServiceClient
-
-# Configure logger
+from azure.identity import DefaultAzureCredential
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger()
+credential = DefaultAzureCredential()
+blob_service_client = BlobServiceClient(
+    account_url="https://salearn220623.blob.core.windows.net/",credential="96rxu4rzwCrz0hpaD/Dr9gvs5WJPXAo6pl1feH3xyth6Z9NCkWcNDzKwTuxU0/VMeOm9pJKWgEzO+AStWlnjiQ==")
 
 def check_user_exists(name, container_client, blob_name):
     with container_client.get_blob_client(blob_name) as blob_client:
