@@ -1,12 +1,15 @@
 import pandas as pd
 import pandera as pa
 import logging
+from azure.identity import DefaultAzureCredential
 from azure.storage.blob import BlobServiceClient
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-connection_string="DefaultEndpointsProtocol=https;AccountName=salearn220623;AccountKey=96rxu4rzwCrz0hpaD/Dr9gvs5WJPXAo6pl1feH3xyth6Z9NCkWcNDzKwTuxU0/VMeOm9pJKWgEzO+AStWlnjiQ==;EndpointSuffix=core.windows.net"
+credential = DefaultAzureCredential()
+blob_service_client = BlobServiceClient(
+    account_url="https://salearn220623.blob.core.windows.net/",credential="96rxu4rzwCrz0hpaD/Dr9gvs5WJPXAo6pl1feH3xyth6Z9NCkWcNDzKwTuxU0/VMeOm9pJKWgEzO+AStWlnjiQ==")
+
 container_name="curated"
 curated_parquet_file="curated.parquet"
-blob_service_client = BlobServiceClient.from_connection_string(connection_string)
 blob_client =blob_service_client.get_blob_client(container=container_name, blob=curated_parquet_file)
 
 
