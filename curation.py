@@ -24,7 +24,7 @@ def add_user(name, age, gender):
         data.to_parquet('curated_parquet_file')
         
         with open(curated_parquet_file, "rb") as file:
-            blob_client.upload_blob(file)
+            blob_client.upload_blob(file,overwrite=True)
             logging.info("Data uploaded to curated")
         
         
