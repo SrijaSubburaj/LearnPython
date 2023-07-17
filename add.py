@@ -1,3 +1,4 @@
+#Reading names.csv from azure
 import pandas as pd
 from azure.storage.blob import BlobServiceClient
 from azure.identity import DefaultAzureCredential
