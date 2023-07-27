@@ -1,7 +1,7 @@
 from prefect import task,flow
-from dataingestion import ingestion_step 
-from datacleansing import cleaning_step
-from datavalidation import validation_step
+from ingest import ingestion_step 
+from cleanse import cleaning_step
+from curate import validation_step
 
 @task
 def step1():
