@@ -1,30 +1,28 @@
-import logging
 import pandas as pd
-from azure.storage.blob import BlobServiceClient
-from azure.identity import DefaultAzureCredential
-from io import StringIO
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
-credential = DefaultAzureCredential()
-blob_service_client = BlobServiceClient(account_url="https://salearn220623.blob.core.windows.net/",credential="96rxu4rzwCrz0hpaD/Dr9gvs5WJPXAo6pl1feH3xyth6Z9NCkWcNDzKwTuxU0/VMeOm9pJKWgEzO+AStWlnjiQ==")
-  
-def convert_csv_to_parquet(parquet_file):
-    blob_client = blob_service_client.get_blob_client(container="raw", blob=csv_file)
-    csv_data = blob_client.download_blob().content_as_text()
-    data = pd.read_csv(StringIO(csv_data))
-    data.to_parquet(parquet_file)
-    logging.info("Data converted to Parquet file")
+import pyarrow as pa
+import pyarrow.parquet as pq
+import json
+import yaml
+import os
 
-    blob_client = blob_service_client.get_blob_client(container="cleansed", blob=parquet_file)
-    try:
-        with open(parquet_file, "rb") as file:
-            blob_client.upload_blob(file)
-    except :
-         with open(parquet_file, "rb") as file:
-            blob_client.upload_blob(file,overwrite=True)
-         logging.info("Parquet file uploaded to cleansed")
+def cleaning_step():
+    main_path = r'C:\Users\ruv5cob\Desktop\Test\Laptop_position_detection\v1\data'
+    list_of_files = os.listdir(os.path.join(main_path,"DP01_Data_Ingestion","01_Logs"))
+    for each in list_of_files:
+        df = pd.read_csv(os.path.join(main_path,"DP01_Data_Ingestion","01_Logs",each))
+        yaml_file = os.path.join(main_path,"DP01_Data_Ingestion","02_Meta",each.split('.')[0]) + ".yaml"
+        with open(yaml_file, 'r') as file:
+            meta_info = yaml.safe_load(file)
+        
+        table = pa.Table.from_pandas(df)
 
-csv_file= "names.csv"
-parquet_file = "names.parquet"
+        #meta data updation
+        custom_meta_key = each.split('.')[0]
+        custom_meta_json = json.dumps(meta_info)
+        existing_meta = table.schema.metadata
+        combined_meta = {custom_meta_key.encode() : custom_meta_json.encode(),**existing_meta}
+        table = table.replace_schema_metadata(combined_meta)
+        
+        pq.write_table(table, os.path.join(main_path,"DP02_Data_cleansing",each.split('.')[0]) + ".parquet", compression='GZIP')
 
-convert_csv_to_parquet(parquet_file)
-
+    return True
