@@ -41,7 +41,7 @@ def ingestion_step():
                 'Technical': 
                     {'DEVICE': 
                         {'dev_name': df.loc['Device','Detail'],
-                        'dev_fw': df.loc['Algo ver','Detail'],
+                        'dev_fw': df.loc['UI Version','Detail'] + df.loc['Algo ver','Detail'].split(' ')[1],
                         'dev_id': None,
                         'dev_loc': None,
                         'dev_orientation': None},
