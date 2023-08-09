@@ -8,10 +8,6 @@ import pandas as pd
 
 def data_ingestion():
 
-    # Reading the user info file
-    user_info = pd.read_excel(r'C:\Users\ruv5cob\Desktop\My files\LPD\User_info.xlsx')
-    user_info.set_index('User',inplace=True)
-
     # Accessing the azure storage account
     load_dotenv("Credentials_azure1.env")
     token_credential = DefaultAzureCredential()
@@ -23,6 +19,17 @@ def data_ingestion():
         container_client2 = blob_service_client.create_container(name="01-ingest-meta")
     except ResourceExistsError:
         print('Containers with these names already exists')
+   
+    # Download user-info file
+    blob_client_instance1 = blob_service_client.get_blob_client("user-info", "User_info.xlsx", snapshot=None)
+    with open("User_info.xlsx", "wb") as my_blob1:
+        blob_data1 = blob_client_instance1.download_blob()
+        blob_data1.readinto(my_blob1)
+
+    # reading the downloaded user-info file
+    user_info = pd.read_excel("User_info.xlsx")
+    user_info.set_index('User',inplace=True)
+    os.remove("User_info.xlsx") # removing the user_info file
 
     # fetching the list of blobs
     container_client3 = blob_service_client.get_container_client(container="source")
