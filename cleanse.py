@@ -18,7 +18,7 @@ def cleanse():
     table = pa.csv.read_csv(csv_directory)
 
     # Add a new column "Timeseries" with the current timestamp to the Table
-    timeseries_array = pa.array([current_time] * len(table), type=pa.timestamp('us'))
+    timeseries_array = pa.array([current_time] * len(table))
     table = table.append_column("Timeseries", timeseries_array)
 
     # Print the metadata from the original CSV file (if any)
@@ -40,4 +40,3 @@ def cleanse():
     # Print the final metadata in the Parquet file
     final_metadata = parquet_table.schema.metadata
     print("Metadata of the Parquet file: ", final_metadata)
-
