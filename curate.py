@@ -2,7 +2,7 @@ import pandas as pd
 import pandera as pa
 import json
 
-def Curate():
+def curate():
     # Path to the initial Parquet file
     initial_directory = "./cleanse/cleanse.parquet"
     # Read the Parquet file into a DataFrame
@@ -25,7 +25,7 @@ def Curate():
     })
     try:
         # Validate DataFrame against the defined schema
-        valid_records = schema.validate(df)
+        valid_records = schema.validate(df)    
         # Path to the curated Parquet file
         curated_directory = "./curated/curated.parquet"
         # Write the curated DataFrame to a new Parquet file

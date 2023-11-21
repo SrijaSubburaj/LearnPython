@@ -1,7 +1,6 @@
 from zipfile import ZipFile
-
 # Function to extract files from a zip archive
-def Extract():
+def extract():
     # Path to the zip file to be extracted
     extract = './landing/customers-100.zip'
     # Destination directory where the files will be extracted

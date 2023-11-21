@@ -6,26 +6,26 @@ import json
 import pandas as pd
 import pandera as pa
 # Import custom tasks from separate modules
-from ingest import Ingest
-from extract import Extract
-from cleanse import Cleanse
-from curate import Curate
+from ingest import ingest
+from extract import extract
+from cleanse import cleanse
+from curate import curate
 # Task 1: Ingest data
 @task
 def task1():
-    Ingest()
+    ingest()
 # Task 2: Extract data
 @task
 def task2():
-    Extract()
+    extract()
 # Task 3: Cleanse data
 @task
 def task3():
-    Cleanse()
+    cleanse()
 # Task 4: Curate data
 @task
 def task4():
-    Curate()
+    curate()
 # Define the Prefect flow
 @Flow
 def flow():
